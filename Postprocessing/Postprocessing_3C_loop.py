@@ -17,14 +17,12 @@ from os.path import isdir, join
                 
 
 titles = ['base_case_cost_h2_0.075','base_case_elec_cost_h2_0.075','High_renew_cost_h2_0.075','High_renew_elec_cost_h2_0.075'] # nom de modèle pour lequel on veut 
-titles = ['base_case_elec_cost_h2_0.075','High_renew_cost_h2_0.075','High_renew_elec_cost_h2_0.075']
-
-opti = 0 # 1 to run the optimisation
-cos_cap = 0 # 1 to produce and save the graphs of costs and capacities
-diag = 0 # 1 to produce and save the diagram
+titles = ['base_case_cost_h2_0.075']
+cos_cap = 1 # 1 to produce and save the graphs of costs and capacities
+diag = 1 # 1 to produce and save the diagram
 st_gr = 1 # 1 to produce and save the stack graphs
-study = 0 # 1 to produce stack graph by clusters
-graphs = 0 # 1 to produce graphs used for the papers
+study = 1 # 1 to produce stack graph by clusters
+graphs = 1 # 1 to produce graphs used for the papers
 
 for title in titles:
     

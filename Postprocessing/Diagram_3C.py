@@ -11,7 +11,7 @@ diagram = '3 clusters.svg' # input file for the diagram
 new_diagram = title + '/Diagram 3 clusters.svg' # output file for the diagram
 
 with open(diagram) as fp:
-    soup = BeautifulSoup(fp, 'xml')
+    soup = BeautifulSoup(fp)
 
 
 #% Functions

@@ -16,12 +16,11 @@ from os import makedirs
 from os.path import isdir, join
                 
 
-titles = ['base_case_cost_h2_0.075','base_case_elec_cost_h2_0.075','High_renew_cost_h2_0.075','High_renew_elec_cost_h2_0.075'] # nom de modèle pour lequel on veut 
-titles = ['base_case_cost_h2_0.075']
+titles = ['base_case_cost_h2_0.075','base_case_elec_cost_h2_0.075','High_renew_cost_h2_0.075','High_renew_elec_cost_h2_0.075'] # name of the scenarios  
 cos_cap = 1 # 1 to produce and save the graphs of costs and capacities
 diag = 1 # 1 to produce and save the diagram
 st_gr = 1 # 1 to produce and save the stack graphs
-study = 1 # 1 to produce stack graph by clusters
+study = 0 # 1 to produce stack graph by clusters
 graphs = 1 # 1 to produce graphs used for the papers
 
 for title in titles:
@@ -72,7 +71,7 @@ for title in titles:
         save_fig_BE_total_costs = 1
         exec(open("Capacities_costs_3C.py").read())
     
-    # Diagram
+    #%% Diagram
     
     if diag == 1:
     

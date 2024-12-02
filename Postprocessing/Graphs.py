@@ -160,39 +160,72 @@ names = {
 data["Name"] = data["Name"].map(names)
 
 sns.set_theme(style="ticks")
-fig, axs = plt.subplots(nrows=5,ncols=2,figsize=(10, 5),height_ratios=[4, 1, 3, 2, 1],width_ratios=[3,2])
-palette = sns.color_palette("YlGnBu", n_colors=5)[1:]
 categories = ["Elec", "CH4", "H2", "CO2", "H2O"]
 names = ["Electricity", "Gas", "Hydrogen", "$CO_2$", "Water"]
 units_power = ["GW_e", "GW_{CH_4}", "GW_{H_2}", "kT_{CO_2}/h", "T_{H_2O}/h"]
 units_quantity = ["TWh_e", "TWh_{CH_4}", "TWh_{H_2}", "MT_{CO_2}", "kT_{H_2O}"]
 
-for types, name, unit_power, unit_quantity, ax in zip(categories, names, units_power, units_quantity, axs):
-    sns.barplot(x="Capacity", y="Name", data=data[data["Type"] == types],
-                label="Installed Power", color=palette[0], ax=ax[0], width=1)
-    for i in ax[0].containers:
-        ax[0].bar_label(i,fmt=f"$%.2f\ {unit_power}$", label_type="edge", padding=2, fontsize=9)
-    sns.barplot(x="Max production", y="Name", data=data[data["Type"] == types],
-                label="Peak power", color=palette[1], ax=ax[0], width=1)
-    sns.barplot(x="Average Power", y="Name", data=data[data["Type"] == types],
-                label="Average Power", color=palette[2], ax=ax[0], width=1)
-    #ax[0].set(xlabel=None, ylabel=f"{name}\n$({unit_power})$")
-    ax[0].set(xlabel=None, ylabel=f"{name}")
-    ax[0].yaxis.label.set_size(12)
+n_type = []
+for types in categories:
+    data_type = data[data["Type"] == types]
+    n_type.append(len(data_type))
 
-    sns.barplot(x="Total production", y="Name", data=data[data["Type"] == types],
-                label="Total production", color=palette[3], ax=ax[1], width=1)
-    for i in ax[1].containers:
-        ax[1].bar_label(i,fmt=f"$%.2f\ {unit_quantity}$", label_type="edge", padding=2, fontsize=9)
-    #ax[1].set(xlabel=None, ylabel=f"$({unit_quantity})$")
-    ax[1].set(xlabel=None, ylabel=None)
-    ax[1].yaxis.label.set_size(10)
-    ax[1].yaxis.set_tick_params(labelleft=False)
+categories_kept = list()
+for i in range(0,len(n_type)):
+    if n_type[i] > 0:
+        categories_kept.append(categories[i])
+        
+names_kept = list()
+for i in range(0,len(n_type)):
+    if n_type[i] > 0:
+        names_kept.append(names[i])
+        
+units_power_kept = list()
+for i in range(0,len(n_type)):
+    if n_type[i] > 0:
+        units_power_kept.append(units_power[i])
+        
+units_quantity_kept = list()
+for i in range(0,len(n_type)):
+    if n_type[i] > 0:
+        units_quantity_kept.append(units_quantity[i])
 
-    ax[0].grid(False)
-    ax[1].grid(False)
-    ax[0].tick_params(left=False)
-    ax[1].tick_params(left=False)
+n_type = [x for x in n_type if x != 0]
+n_rows = len(n_type)
+
+fig, axs = plt.subplots(nrows=n_rows,ncols=2,figsize=(10, 5),height_ratios=n_type,width_ratios=[3,2])
+palette = sns.color_palette("YlGnBu", n_colors=5)[1:]
+
+for types, name, unit_power, unit_quantity, ax in zip(categories_kept, names_kept, units_power_kept, units_quantity_kept, axs):
+    filter_data = data[data["Type"] == types]
+    if filter_data.empty:
+        print("No data available for the selected type:", types)
+    else:
+        sns.barplot(x="Capacity", y="Name", data=data[data["Type"] == types],
+                    label="Installed Power", color=palette[0], ax=ax[0], width=1)
+        for i in ax[0].containers:
+            ax[0].bar_label(i,fmt=f"$%.2f\ {unit_power}$", label_type="edge", padding=2, fontsize=9)
+        sns.barplot(x="Max production", y="Name", data=data[data["Type"] == types],
+                    label="Peak power", color=palette[1], ax=ax[0], width=1)
+        sns.barplot(x="Average Power", y="Name", data=data[data["Type"] == types],
+                    label="Average Power", color=palette[2], ax=ax[0], width=1)
+        #ax[0].set(xlabel=None, ylabel=f"{name}\n$({unit_power})$")
+        ax[0].set(xlabel=None, ylabel=f"{name}")
+        ax[0].yaxis.label.set_size(12)
+    
+        sns.barplot(x="Total production", y="Name", data=data[data["Type"] == types],
+                    label="Total production", color=palette[3], ax=ax[1], width=1)
+        for i in ax[1].containers:
+            ax[1].bar_label(i,fmt=f"$%.2f\ {unit_quantity}$", label_type="edge", padding=2, fontsize=9)
+        #ax[1].set(xlabel=None, ylabel=f"$({unit_quantity})$")
+        ax[1].set(xlabel=None, ylabel=None)
+        ax[1].yaxis.label.set_size(10)
+        ax[1].yaxis.set_tick_params(labelleft=False)
+    
+        ax[0].grid(False)
+        ax[1].grid(False)
+        ax[0].tick_params(left=False)
+        ax[1].tick_params(left=False)
 
 axs[0][0].set_title("Power")
 axs[0][1].set_title("Energy or Quantity")
